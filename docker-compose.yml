@@ -1,0 +1,38 @@
+version: '2'
+
+networks:
+  upperlink:
+    driver: bridge
+    ipam: # we want to use "null" driver, but it is broken...
+      driver: default
+      config:
+        - subnet: 192.168.87.0/24
+  lowerlink:
+    driver: bridge
+    ipam: # we want to use "null" driver, but it is broken...
+      driver: default
+      config:
+        - subnet: 192.168.88.0/24
+
+services:
+  hanad-container:
+    build: hanad-container
+    image: hanad-container
+    networks:
+      - upperlink
+      - lowerlink
+    container_name: ${VMNAME}
+
+  hanapeerd-container:
+    build: hanapeerd-container
+    image: hanapeerd-container
+    container_name: ${VMNAME}-hanapeerd
+    network_mode: "container:${VMNAME}"
+
+  hanaroute-container:
+    build: hanaroute-container
+    image: hanaroute-container
+    container_name: ${VMNAME}-hanaroute
+    network_mode: "container:${VMNAME}"
+    cap_add:
+      - NET_ADMIN
