@@ -1,17 +1,24 @@
-SRCDIR=akari-rid2-trunk/src
+REPOSITORY=svn+ssh://svn-akari-rid2@svn.trans-nt.com/repos/trunk
+CHECKOUTDIR=akari-rid2-trunk
+SRCDIR=$(CHECKOUTDIR)/src
 COMPONENTS=hanad hanapeerd hanaroute
 CONTAINER_AUTHOR=koyama
 
-.PHONY: all clean distclean
+.PHONY: all build clean buildclean distclean
 
-all: 
-	(cd $(SRCDIR); make all)
+all: build
 	@for component in $(COMPONENTS); do \
 	  dir=$${component}-container; \
 	  container=$(CONTAINER_AUTHOR)/$$dir; \
 	  cp $(SRCDIR)/$$component/obj/$$component $$dir; \
 	  docker build -t $$container $$dir; \
 	done
+
+build: $(CHECKOUTDIR)
+	(cd $(SRCDIR); make all)
+
+$(CHECKOUTDIR):
+	svn co $(REPOSITORY) $(CHECKOUTDIR)
 
 keep-images:
 	@for component in $(COMPONENTS); do \
@@ -26,5 +33,8 @@ clean:
 	  rm -f $$dir/$$component; \
 	done
 
+buildclean: clean
+	(cd $(SRCDIR); make clean)
+
 distclean: clean
-	(cd $(SRCDIR); make all)
+	rm -rf $(CHECKOUTDIR)
