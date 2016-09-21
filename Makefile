@@ -21,6 +21,10 @@ keep-images:
 
 clean:
 	IMAGES=`docker ps -a -q`; if [ "$$IMAGES" != "" ]; then docker rm $$IMAGES; fi
+	for component in $(COMPONENTS); do \
+	  dir=$${component}-container; \
+	  rm -f $$dir/$$component; \
+	done
 
 distclean: clean
 	(cd $(SRCDIR); make all)
