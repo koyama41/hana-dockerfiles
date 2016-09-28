@@ -15,24 +15,95 @@ networks:
         - subnet: 192.168.88.0/24
 
 services:
-  hanad-container:
-    build: hanad-container
-    image: hanad-container
+  vm01:
+    build: unbound-container
+    image: hana/unbound-container
     networks:
       - upperlink
       - lowerlink
-    container_name: ${VMNAME}
+    dns: 127.0.0.1
+    container_name: "vm01"
 
-  hanapeerd-container:
+  vm01-hanad:
+    build: hanad-container
+    image: hana/hanad-container
+    container_name: vm01-hanad
+    network_mode: "service:vm01"
+
+  vm01-hanapeerd:
     build: hanapeerd-container
-    image: hanapeerd-container
-    container_name: ${VMNAME}-hanapeerd
-    network_mode: "container:${VMNAME}"
+    image: hana/hanapeerd-container
+    container_name: vm01-hanapeerd
+    network_mode: "service:vm01"
 
-  hanaroute-container:
+  vm01-hanaroute:
     build: hanaroute-container
-    image: hanaroute-container
-    container_name: ${VMNAME}-hanaroute
-    network_mode: "container:${VMNAME}"
+    image: hana/hanaroute-container
+    container_name: vm01-hanaroute
+    network_mode: "service:vm01"
+    depends_on:
+      - vm01-hanad
+    cap_add:
+      - NET_ADMIN
+
+  vm02:
+    build: unbound-container
+    image: hana/unbound-container
+    networks:
+      - upperlink
+      - lowerlink
+    dns: 127.0.0.1
+    container_name: "vm02"
+
+  vm02-hanad:
+    build: hanad-container
+    image: hana/hanad-container
+    container_name: vm02-hanad
+    network_mode: "service:vm02"
+
+  vm02-hanapeerd:
+    build: hanapeerd-container
+    image: hana/hanapeerd-container
+    container_name: vm02-hanapeerd
+    network_mode: "service:vm02"
+
+  vm02-hanaroute:
+    build: hanaroute-container
+    image: hana/hanaroute-container
+    container_name: vm02-hanaroute
+    network_mode: "service:vm02"
+    depends_on:
+      - vm02-hanad
+    cap_add:
+      - NET_ADMIN
+
+  vm03:
+    build: unbound-container
+    image: hana/unbound-container
+    networks:
+      - upperlink
+      - lowerlink
+    dns: 127.0.0.1
+    container_name: "vm03"
+
+  vm03-hanad:
+    build: hanad-container
+    image: hana/hanad-container
+    container_name: vm03-hanad
+    network_mode: "service:vm03"
+
+  vm03-hanapeerd:
+    build: hanapeerd-container
+    image: hana/hanapeerd-container
+    container_name: vm03-hanapeerd
+    network_mode: "service:vm03"
+
+  vm03-hanaroute:
+    build: hanaroute-container
+    image: hana/hanaroute-container
+    container_name: vm03-hanaroute
+    network_mode: "service:vm03"
+    depends_on:
+      - vm03-hanad
     cap_add:
       - NET_ADMIN

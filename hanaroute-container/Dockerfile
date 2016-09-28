@@ -3,4 +3,4 @@ MAINTAINER KOYAMA Youichi <koyama@trans-nt.com>
 WORKDIR /
 COPY hanaroute /usr/bin/
 ENTRYPOINT [ "/usr/bin/hanaroute" ]
-CMD [ "127.0.0.1" "3000" ]
+CMD [ "-vv", "-r", "127.0.0.1", "3000" ]

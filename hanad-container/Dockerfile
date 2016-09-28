@@ -3,4 +3,4 @@ MAINTAINER KOYAMA Youichi <koyama@trans-nt.com>
 WORKDIR /
 COPY hanad /usr/bin/
 ENTRYPOINT [ "/usr/bin/hanad" ]
-CMD [ "3000" ]
+CMD [ "-v", "7", "3000" ]
