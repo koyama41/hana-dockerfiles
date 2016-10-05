@@ -20,6 +20,7 @@ networks:
 services:
 EOF
 
+hostid=101
 for vmname in vm1 vm2 vm3 vm4 vm5 vm6 vm7 vm8 vm9 vm10 vm11
 do
   cat << EOF
@@ -28,14 +29,16 @@ do
     image: hana/sshd-container
     container_name: "$vmname"
     networks:
-      - upperlink
-      - lowerlink
+      upperlink:
+        ipv4_address: 192.168.87.$hostid
+      lowerlink:
+        ipv4_address: 192.168.88.$hostid
     hostname: $vmname
     dns: 127.0.0.1
     cap_add:
-      - CAP_NET_RAW
-      - CAP_NET_BIND_SERVICE
-      - CAP_SYS_MODULE
+      - NET_RAW
+      - NET_BIND_SERVICE
+      - SYS_MODULE
 
   $vmname-unbound:
     build: unbound-container
@@ -65,4 +68,5 @@ do
     cap_add:
       - NET_ADMIN
 EOF
+hostid=`expr $hostid + 1`
 done   

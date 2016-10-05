@@ -3,6 +3,7 @@ CHECKOUTDIR=akari-rid2-trunk
 SRCDIR=$(CHECKOUTDIR)/src
 COMTAINER_AUTHOR=hana
 HANA_COMPONENTS=hanad hanapeerd hanaroute
+SSHD_COMPONENTS=sshd
 EXT_COMPONENTS=unbound
 
 DOCKER=/usr/bin/docker
@@ -15,6 +16,7 @@ all: build
 	  dir=$${component}-container; \
 	  cp $(SRCDIR)/$$component/obj/$$component $$dir; \
 	done
+	@cp ~/.ssh/id_rsa.pub $(SSHD_COMPONENTS)-container/authorized_keys
 	$(DOCKER_COMPOSE) build
 
 build: $(CHECKOUTDIR)
@@ -24,7 +26,7 @@ $(CHECKOUTDIR):
 	svn co $(REPOSITORY) $(CHECKOUTDIR)
 
 keep-images:
-	@for component in $(HANA_COMPONENTS) $(EXT_COMPONENTS); do \
+	@for component in $(HANA_COMPONENTS) $(SSHD_COMPONENT) $(EXT_COMPONENTS); do \
 	  container=$(CONTAINER_AUTHOR)/$${component}-container; \
 	  $(DOCKER) tag $$container $$container:`date +%Y.%m.%d.%H%M`; \
 	done
@@ -35,6 +37,7 @@ clean:
 	  dir=$${component}-container; \
 	  rm -f $$dir/$$component; \
 	done
+	rm -f $(SSHD_COMPONENTS)-container/authorized_keys
 
 buildclean: clean
 	(cd $(SRCDIR); make clean)
