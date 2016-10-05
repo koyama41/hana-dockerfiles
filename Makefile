@@ -9,7 +9,7 @@ EXT_COMPONENTS=unbound
 DOCKER=/usr/bin/docker
 DOCKER_COMPOSE=/usr/local/bin/docker-compose
 
-.PHONY: all build clean buildclean distclean
+.PHONY: all build clean buildclean distclean up start stop
 
 all: build
 	@for component in $(HANA_COMPONENTS); do \
@@ -31,7 +31,7 @@ keep-images:
 	  $(DOCKER) tag $$container $$container:`date +%Y.%m.%d.%H%M`; \
 	done
 
-clean:
+clean: stop
 	IMAGES=`$(DOCKER) ps -a -q`; if [ "$$IMAGES" != "" ]; then $(DOCKER) rm $$IMAGES; fi
 	for component in $(HANA_COMPONENTS); do \
 	  dir=$${component}-container; \
@@ -44,3 +44,11 @@ buildclean: clean
 
 distclean: clean
 	rm -rf $(CHECKOUTDIR)
+
+
+start: up
+up:
+	$(DOCKER_COMPOSE) up
+
+stop:
+	$(DOCKER_COMPOSE) stop
