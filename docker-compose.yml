@@ -15,95 +15,454 @@ networks:
         - subnet: 192.168.88.0/24
 
 services:
-  vm01:
-    build: unbound-container
-    image: hana/unbound-container
+  vm1:
+    build: sshd-container
+    image: hana/sshd-container
+    container_name: "vm1"
     networks:
       - upperlink
       - lowerlink
+    hostname: vm1
     dns: 127.0.0.1
-    container_name: "vm01"
+    cap_add:
+      - CAP_NET_RAW
+      - CAP_NET_BIND_SERVICE
+      - CAP_SYS_MODULE
 
-  vm01-hanad:
+  vm1-unbound:
+    build: unbound-container
+    image: hana/unbound-container
+    container_name: vm1-unbound
+    network_mode: "service:vm1"
+
+  vm1-hanad:
     build: hanad-container
     image: hana/hanad-container
-    container_name: vm01-hanad
-    network_mode: "service:vm01"
+    container_name: vm1-hanad
+    network_mode: "service:vm1"
 
-  vm01-hanapeerd:
+  vm1-hanapeerd:
     build: hanapeerd-container
     image: hana/hanapeerd-container
-    container_name: vm01-hanapeerd
-    network_mode: "service:vm01"
+    container_name: vm1-hanapeerd
+    network_mode: "service:vm1"
 
-  vm01-hanaroute:
+  vm1-hanaroute:
     build: hanaroute-container
     image: hana/hanaroute-container
-    container_name: vm01-hanaroute
-    network_mode: "service:vm01"
+    container_name: vm1-hanaroute
+    network_mode: "service:vm1"
     depends_on:
-      - vm01-hanad
+      - vm1-hanad
     cap_add:
       - NET_ADMIN
-
-  vm02:
-    build: unbound-container
-    image: hana/unbound-container
+  vm2:
+    build: sshd-container
+    image: hana/sshd-container
+    container_name: "vm2"
     networks:
       - upperlink
       - lowerlink
+    hostname: vm2
     dns: 127.0.0.1
-    container_name: "vm02"
+    cap_add:
+      - CAP_NET_RAW
+      - CAP_NET_BIND_SERVICE
+      - CAP_SYS_MODULE
 
-  vm02-hanad:
+  vm2-unbound:
+    build: unbound-container
+    image: hana/unbound-container
+    container_name: vm2-unbound
+    network_mode: "service:vm2"
+
+  vm2-hanad:
     build: hanad-container
     image: hana/hanad-container
-    container_name: vm02-hanad
-    network_mode: "service:vm02"
+    container_name: vm2-hanad
+    network_mode: "service:vm2"
 
-  vm02-hanapeerd:
+  vm2-hanapeerd:
     build: hanapeerd-container
     image: hana/hanapeerd-container
-    container_name: vm02-hanapeerd
-    network_mode: "service:vm02"
+    container_name: vm2-hanapeerd
+    network_mode: "service:vm2"
 
-  vm02-hanaroute:
+  vm2-hanaroute:
     build: hanaroute-container
     image: hana/hanaroute-container
-    container_name: vm02-hanaroute
-    network_mode: "service:vm02"
+    container_name: vm2-hanaroute
+    network_mode: "service:vm2"
     depends_on:
-      - vm02-hanad
+      - vm2-hanad
     cap_add:
       - NET_ADMIN
-
-  vm03:
-    build: unbound-container
-    image: hana/unbound-container
+  vm3:
+    build: sshd-container
+    image: hana/sshd-container
+    container_name: "vm3"
     networks:
       - upperlink
       - lowerlink
+    hostname: vm3
     dns: 127.0.0.1
-    container_name: "vm03"
+    cap_add:
+      - CAP_NET_RAW
+      - CAP_NET_BIND_SERVICE
+      - CAP_SYS_MODULE
 
-  vm03-hanad:
+  vm3-unbound:
+    build: unbound-container
+    image: hana/unbound-container
+    container_name: vm3-unbound
+    network_mode: "service:vm3"
+
+  vm3-hanad:
     build: hanad-container
     image: hana/hanad-container
-    container_name: vm03-hanad
-    network_mode: "service:vm03"
+    container_name: vm3-hanad
+    network_mode: "service:vm3"
 
-  vm03-hanapeerd:
+  vm3-hanapeerd:
     build: hanapeerd-container
     image: hana/hanapeerd-container
-    container_name: vm03-hanapeerd
-    network_mode: "service:vm03"
+    container_name: vm3-hanapeerd
+    network_mode: "service:vm3"
 
-  vm03-hanaroute:
+  vm3-hanaroute:
     build: hanaroute-container
     image: hana/hanaroute-container
-    container_name: vm03-hanaroute
-    network_mode: "service:vm03"
+    container_name: vm3-hanaroute
+    network_mode: "service:vm3"
     depends_on:
-      - vm03-hanad
+      - vm3-hanad
+    cap_add:
+      - NET_ADMIN
+  vm4:
+    build: sshd-container
+    image: hana/sshd-container
+    container_name: "vm4"
+    networks:
+      - upperlink
+      - lowerlink
+    hostname: vm4
+    dns: 127.0.0.1
+    cap_add:
+      - CAP_NET_RAW
+      - CAP_NET_BIND_SERVICE
+      - CAP_SYS_MODULE
+
+  vm4-unbound:
+    build: unbound-container
+    image: hana/unbound-container
+    container_name: vm4-unbound
+    network_mode: "service:vm4"
+
+  vm4-hanad:
+    build: hanad-container
+    image: hana/hanad-container
+    container_name: vm4-hanad
+    network_mode: "service:vm4"
+
+  vm4-hanapeerd:
+    build: hanapeerd-container
+    image: hana/hanapeerd-container
+    container_name: vm4-hanapeerd
+    network_mode: "service:vm4"
+
+  vm4-hanaroute:
+    build: hanaroute-container
+    image: hana/hanaroute-container
+    container_name: vm4-hanaroute
+    network_mode: "service:vm4"
+    depends_on:
+      - vm4-hanad
+    cap_add:
+      - NET_ADMIN
+  vm5:
+    build: sshd-container
+    image: hana/sshd-container
+    container_name: "vm5"
+    networks:
+      - upperlink
+      - lowerlink
+    hostname: vm5
+    dns: 127.0.0.1
+    cap_add:
+      - CAP_NET_RAW
+      - CAP_NET_BIND_SERVICE
+      - CAP_SYS_MODULE
+
+  vm5-unbound:
+    build: unbound-container
+    image: hana/unbound-container
+    container_name: vm5-unbound
+    network_mode: "service:vm5"
+
+  vm5-hanad:
+    build: hanad-container
+    image: hana/hanad-container
+    container_name: vm5-hanad
+    network_mode: "service:vm5"
+
+  vm5-hanapeerd:
+    build: hanapeerd-container
+    image: hana/hanapeerd-container
+    container_name: vm5-hanapeerd
+    network_mode: "service:vm5"
+
+  vm5-hanaroute:
+    build: hanaroute-container
+    image: hana/hanaroute-container
+    container_name: vm5-hanaroute
+    network_mode: "service:vm5"
+    depends_on:
+      - vm5-hanad
+    cap_add:
+      - NET_ADMIN
+  vm6:
+    build: sshd-container
+    image: hana/sshd-container
+    container_name: "vm6"
+    networks:
+      - upperlink
+      - lowerlink
+    hostname: vm6
+    dns: 127.0.0.1
+    cap_add:
+      - CAP_NET_RAW
+      - CAP_NET_BIND_SERVICE
+      - CAP_SYS_MODULE
+
+  vm6-unbound:
+    build: unbound-container
+    image: hana/unbound-container
+    container_name: vm6-unbound
+    network_mode: "service:vm6"
+
+  vm6-hanad:
+    build: hanad-container
+    image: hana/hanad-container
+    container_name: vm6-hanad
+    network_mode: "service:vm6"
+
+  vm6-hanapeerd:
+    build: hanapeerd-container
+    image: hana/hanapeerd-container
+    container_name: vm6-hanapeerd
+    network_mode: "service:vm6"
+
+  vm6-hanaroute:
+    build: hanaroute-container
+    image: hana/hanaroute-container
+    container_name: vm6-hanaroute
+    network_mode: "service:vm6"
+    depends_on:
+      - vm6-hanad
+    cap_add:
+      - NET_ADMIN
+  vm7:
+    build: sshd-container
+    image: hana/sshd-container
+    container_name: "vm7"
+    networks:
+      - upperlink
+      - lowerlink
+    hostname: vm7
+    dns: 127.0.0.1
+    cap_add:
+      - CAP_NET_RAW
+      - CAP_NET_BIND_SERVICE
+      - CAP_SYS_MODULE
+
+  vm7-unbound:
+    build: unbound-container
+    image: hana/unbound-container
+    container_name: vm7-unbound
+    network_mode: "service:vm7"
+
+  vm7-hanad:
+    build: hanad-container
+    image: hana/hanad-container
+    container_name: vm7-hanad
+    network_mode: "service:vm7"
+
+  vm7-hanapeerd:
+    build: hanapeerd-container
+    image: hana/hanapeerd-container
+    container_name: vm7-hanapeerd
+    network_mode: "service:vm7"
+
+  vm7-hanaroute:
+    build: hanaroute-container
+    image: hana/hanaroute-container
+    container_name: vm7-hanaroute
+    network_mode: "service:vm7"
+    depends_on:
+      - vm7-hanad
+    cap_add:
+      - NET_ADMIN
+  vm8:
+    build: sshd-container
+    image: hana/sshd-container
+    container_name: "vm8"
+    networks:
+      - upperlink
+      - lowerlink
+    hostname: vm8
+    dns: 127.0.0.1
+    cap_add:
+      - CAP_NET_RAW
+      - CAP_NET_BIND_SERVICE
+      - CAP_SYS_MODULE
+
+  vm8-unbound:
+    build: unbound-container
+    image: hana/unbound-container
+    container_name: vm8-unbound
+    network_mode: "service:vm8"
+
+  vm8-hanad:
+    build: hanad-container
+    image: hana/hanad-container
+    container_name: vm8-hanad
+    network_mode: "service:vm8"
+
+  vm8-hanapeerd:
+    build: hanapeerd-container
+    image: hana/hanapeerd-container
+    container_name: vm8-hanapeerd
+    network_mode: "service:vm8"
+
+  vm8-hanaroute:
+    build: hanaroute-container
+    image: hana/hanaroute-container
+    container_name: vm8-hanaroute
+    network_mode: "service:vm8"
+    depends_on:
+      - vm8-hanad
+    cap_add:
+      - NET_ADMIN
+  vm9:
+    build: sshd-container
+    image: hana/sshd-container
+    container_name: "vm9"
+    networks:
+      - upperlink
+      - lowerlink
+    hostname: vm9
+    dns: 127.0.0.1
+    cap_add:
+      - CAP_NET_RAW
+      - CAP_NET_BIND_SERVICE
+      - CAP_SYS_MODULE
+
+  vm9-unbound:
+    build: unbound-container
+    image: hana/unbound-container
+    container_name: vm9-unbound
+    network_mode: "service:vm9"
+
+  vm9-hanad:
+    build: hanad-container
+    image: hana/hanad-container
+    container_name: vm9-hanad
+    network_mode: "service:vm9"
+
+  vm9-hanapeerd:
+    build: hanapeerd-container
+    image: hana/hanapeerd-container
+    container_name: vm9-hanapeerd
+    network_mode: "service:vm9"
+
+  vm9-hanaroute:
+    build: hanaroute-container
+    image: hana/hanaroute-container
+    container_name: vm9-hanaroute
+    network_mode: "service:vm9"
+    depends_on:
+      - vm9-hanad
+    cap_add:
+      - NET_ADMIN
+  vm10:
+    build: sshd-container
+    image: hana/sshd-container
+    container_name: "vm10"
+    networks:
+      - upperlink
+      - lowerlink
+    hostname: vm10
+    dns: 127.0.0.1
+    cap_add:
+      - CAP_NET_RAW
+      - CAP_NET_BIND_SERVICE
+      - CAP_SYS_MODULE
+
+  vm10-unbound:
+    build: unbound-container
+    image: hana/unbound-container
+    container_name: vm10-unbound
+    network_mode: "service:vm10"
+
+  vm10-hanad:
+    build: hanad-container
+    image: hana/hanad-container
+    container_name: vm10-hanad
+    network_mode: "service:vm10"
+
+  vm10-hanapeerd:
+    build: hanapeerd-container
+    image: hana/hanapeerd-container
+    container_name: vm10-hanapeerd
+    network_mode: "service:vm10"
+
+  vm10-hanaroute:
+    build: hanaroute-container
+    image: hana/hanaroute-container
+    container_name: vm10-hanaroute
+    network_mode: "service:vm10"
+    depends_on:
+      - vm10-hanad
+    cap_add:
+      - NET_ADMIN
+  vm11:
+    build: sshd-container
+    image: hana/sshd-container
+    container_name: "vm11"
+    networks:
+      - upperlink
+      - lowerlink
+    hostname: vm11
+    dns: 127.0.0.1
+    cap_add:
+      - CAP_NET_RAW
+      - CAP_NET_BIND_SERVICE
+      - CAP_SYS_MODULE
+
+  vm11-unbound:
+    build: unbound-container
+    image: hana/unbound-container
+    container_name: vm11-unbound
+    network_mode: "service:vm11"
+
+  vm11-hanad:
+    build: hanad-container
+    image: hana/hanad-container
+    container_name: vm11-hanad
+    network_mode: "service:vm11"
+
+  vm11-hanapeerd:
+    build: hanapeerd-container
+    image: hana/hanapeerd-container
+    container_name: vm11-hanapeerd
+    network_mode: "service:vm11"
+
+  vm11-hanaroute:
+    build: hanaroute-container
+    image: hana/hanaroute-container
+    container_name: vm11-hanaroute
+    network_mode: "service:vm11"
+    depends_on:
+      - vm11-hanad
     cap_add:
       - NET_ADMIN
