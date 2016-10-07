@@ -48,7 +48,7 @@ distclean: clean
 
 start: up
 up:
-	$(DOCKER_COMPOSE) up
+	$(DOCKER_COMPOSE) up -d
 
 stop:
 	$(DOCKER_COMPOSE) stop
