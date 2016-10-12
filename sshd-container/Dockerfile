@@ -1,4 +1,4 @@
-FROM koyama41/ubuntu14.04-sshd
+FROM koyama41/ubuntu14.04-sshd-netadmin
 MAINTAINER KOYAMA Youichi <koyama@trans-nt.com>
 WORKDIR /
 RUN mkdir /var/run/sshd
