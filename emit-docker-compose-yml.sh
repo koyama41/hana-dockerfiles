@@ -37,6 +37,7 @@ do
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
+      - NET_ADMIN
       - NET_BIND_SERVICE
       - SYS_MODULE
 
