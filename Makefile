@@ -2,7 +2,7 @@ REPOSITORY=svn+ssh://svn-akari-rid2@svn.trans-nt.com/repos/trunk
 CHECKOUTDIR=akari-rid2-trunk
 SRCDIR=$(CHECKOUTDIR)/src
 COMTAINER_AUTHOR=hana
-HANA_COMPONENTS=hanad hanapeerd hanaroute
+HANA_COMPONENTS=hanad hanapeerd hanaroute hanansupdate
 SSHD_COMPONENTS=sshd
 EXT_COMPONENTS=unbound
 

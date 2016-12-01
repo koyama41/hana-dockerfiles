@@ -7,12 +7,21 @@ networks:
       driver: default
       config:
         - subnet: 192.168.87.0/24
+          gateway: 192.168.87.254
   lowerlink:
     driver: bridge
     ipam: # we want to use "null" driver, but it is broken...
       driver: default
       config:
         - subnet: 192.168.88.0/24
+          gateway: 192.168.88.254
+  maintainlink:
+    driver: bridge
+    ipam: # we want to use "null" driver, but it is broken...
+      driver: default
+      config:
+        - subnet: 192.168.89.0/24
+          gateway: 192.168.89.254
 
 services:
   vm1:
@@ -21,16 +30,17 @@ services:
     container_name: "vm1"
     networks:
       upperlink:
-        ipv4_address: 192.168.87.101
+        ipv4_address: 192.168.87.1
       lowerlink:
-        ipv4_address: 192.168.88.101
+        ipv4_address: 192.168.88.1
+      maintainlink:
+        ipv4_address: 192.168.89.1
     hostname: vm1
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
       - NET_ADMIN
       - NET_BIND_SERVICE
-      - SYS_MODULE
 
   vm1-unbound:
     build: unbound-container
@@ -59,22 +69,31 @@ services:
       - vm1-hanad
     cap_add:
       - NET_ADMIN
+
+  vm1-hanansupdate:
+    build: hanansupdate-container
+    image: hana/hanansupdate-container
+    container_name: vm1-hanansupdate
+    network_mode: "service:vm1"
+    depends_on:
+      - vm1-hanad
   vm2:
     build: sshd-container
     image: hana/sshd-container
     container_name: "vm2"
     networks:
       upperlink:
-        ipv4_address: 192.168.87.102
+        ipv4_address: 192.168.87.2
       lowerlink:
-        ipv4_address: 192.168.88.102
+        ipv4_address: 192.168.88.2
+      maintainlink:
+        ipv4_address: 192.168.89.2
     hostname: vm2
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
       - NET_ADMIN
       - NET_BIND_SERVICE
-      - SYS_MODULE
 
   vm2-unbound:
     build: unbound-container
@@ -103,22 +122,31 @@ services:
       - vm2-hanad
     cap_add:
       - NET_ADMIN
+
+  vm2-hanansupdate:
+    build: hanansupdate-container
+    image: hana/hanansupdate-container
+    container_name: vm2-hanansupdate
+    network_mode: "service:vm2"
+    depends_on:
+      - vm2-hanad
   vm3:
     build: sshd-container
     image: hana/sshd-container
     container_name: "vm3"
     networks:
       upperlink:
-        ipv4_address: 192.168.87.103
+        ipv4_address: 192.168.87.3
       lowerlink:
-        ipv4_address: 192.168.88.103
+        ipv4_address: 192.168.88.3
+      maintainlink:
+        ipv4_address: 192.168.89.3
     hostname: vm3
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
       - NET_ADMIN
       - NET_BIND_SERVICE
-      - SYS_MODULE
 
   vm3-unbound:
     build: unbound-container
@@ -147,22 +175,31 @@ services:
       - vm3-hanad
     cap_add:
       - NET_ADMIN
+
+  vm3-hanansupdate:
+    build: hanansupdate-container
+    image: hana/hanansupdate-container
+    container_name: vm3-hanansupdate
+    network_mode: "service:vm3"
+    depends_on:
+      - vm3-hanad
   vm4:
     build: sshd-container
     image: hana/sshd-container
     container_name: "vm4"
     networks:
       upperlink:
-        ipv4_address: 192.168.87.104
+        ipv4_address: 192.168.87.4
       lowerlink:
-        ipv4_address: 192.168.88.104
+        ipv4_address: 192.168.88.4
+      maintainlink:
+        ipv4_address: 192.168.89.4
     hostname: vm4
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
       - NET_ADMIN
       - NET_BIND_SERVICE
-      - SYS_MODULE
 
   vm4-unbound:
     build: unbound-container
@@ -191,22 +228,31 @@ services:
       - vm4-hanad
     cap_add:
       - NET_ADMIN
+
+  vm4-hanansupdate:
+    build: hanansupdate-container
+    image: hana/hanansupdate-container
+    container_name: vm4-hanansupdate
+    network_mode: "service:vm4"
+    depends_on:
+      - vm4-hanad
   vm5:
     build: sshd-container
     image: hana/sshd-container
     container_name: "vm5"
     networks:
       upperlink:
-        ipv4_address: 192.168.87.105
+        ipv4_address: 192.168.87.5
       lowerlink:
-        ipv4_address: 192.168.88.105
+        ipv4_address: 192.168.88.5
+      maintainlink:
+        ipv4_address: 192.168.89.5
     hostname: vm5
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
       - NET_ADMIN
       - NET_BIND_SERVICE
-      - SYS_MODULE
 
   vm5-unbound:
     build: unbound-container
@@ -235,22 +281,31 @@ services:
       - vm5-hanad
     cap_add:
       - NET_ADMIN
+
+  vm5-hanansupdate:
+    build: hanansupdate-container
+    image: hana/hanansupdate-container
+    container_name: vm5-hanansupdate
+    network_mode: "service:vm5"
+    depends_on:
+      - vm5-hanad
   vm6:
     build: sshd-container
     image: hana/sshd-container
     container_name: "vm6"
     networks:
       upperlink:
-        ipv4_address: 192.168.87.106
+        ipv4_address: 192.168.87.6
       lowerlink:
-        ipv4_address: 192.168.88.106
+        ipv4_address: 192.168.88.6
+      maintainlink:
+        ipv4_address: 192.168.89.6
     hostname: vm6
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
       - NET_ADMIN
       - NET_BIND_SERVICE
-      - SYS_MODULE
 
   vm6-unbound:
     build: unbound-container
@@ -279,22 +334,31 @@ services:
       - vm6-hanad
     cap_add:
       - NET_ADMIN
+
+  vm6-hanansupdate:
+    build: hanansupdate-container
+    image: hana/hanansupdate-container
+    container_name: vm6-hanansupdate
+    network_mode: "service:vm6"
+    depends_on:
+      - vm6-hanad
   vm7:
     build: sshd-container
     image: hana/sshd-container
     container_name: "vm7"
     networks:
       upperlink:
-        ipv4_address: 192.168.87.107
+        ipv4_address: 192.168.87.7
       lowerlink:
-        ipv4_address: 192.168.88.107
+        ipv4_address: 192.168.88.7
+      maintainlink:
+        ipv4_address: 192.168.89.7
     hostname: vm7
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
       - NET_ADMIN
       - NET_BIND_SERVICE
-      - SYS_MODULE
 
   vm7-unbound:
     build: unbound-container
@@ -323,22 +387,31 @@ services:
       - vm7-hanad
     cap_add:
       - NET_ADMIN
+
+  vm7-hanansupdate:
+    build: hanansupdate-container
+    image: hana/hanansupdate-container
+    container_name: vm7-hanansupdate
+    network_mode: "service:vm7"
+    depends_on:
+      - vm7-hanad
   vm8:
     build: sshd-container
     image: hana/sshd-container
     container_name: "vm8"
     networks:
       upperlink:
-        ipv4_address: 192.168.87.108
+        ipv4_address: 192.168.87.8
       lowerlink:
-        ipv4_address: 192.168.88.108
+        ipv4_address: 192.168.88.8
+      maintainlink:
+        ipv4_address: 192.168.89.8
     hostname: vm8
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
       - NET_ADMIN
       - NET_BIND_SERVICE
-      - SYS_MODULE
 
   vm8-unbound:
     build: unbound-container
@@ -367,22 +440,31 @@ services:
       - vm8-hanad
     cap_add:
       - NET_ADMIN
+
+  vm8-hanansupdate:
+    build: hanansupdate-container
+    image: hana/hanansupdate-container
+    container_name: vm8-hanansupdate
+    network_mode: "service:vm8"
+    depends_on:
+      - vm8-hanad
   vm9:
     build: sshd-container
     image: hana/sshd-container
     container_name: "vm9"
     networks:
       upperlink:
-        ipv4_address: 192.168.87.109
+        ipv4_address: 192.168.87.9
       lowerlink:
-        ipv4_address: 192.168.88.109
+        ipv4_address: 192.168.88.9
+      maintainlink:
+        ipv4_address: 192.168.89.9
     hostname: vm9
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
       - NET_ADMIN
       - NET_BIND_SERVICE
-      - SYS_MODULE
 
   vm9-unbound:
     build: unbound-container
@@ -411,22 +493,31 @@ services:
       - vm9-hanad
     cap_add:
       - NET_ADMIN
+
+  vm9-hanansupdate:
+    build: hanansupdate-container
+    image: hana/hanansupdate-container
+    container_name: vm9-hanansupdate
+    network_mode: "service:vm9"
+    depends_on:
+      - vm9-hanad
   vm10:
     build: sshd-container
     image: hana/sshd-container
     container_name: "vm10"
     networks:
       upperlink:
-        ipv4_address: 192.168.87.110
+        ipv4_address: 192.168.87.10
       lowerlink:
-        ipv4_address: 192.168.88.110
+        ipv4_address: 192.168.88.10
+      maintainlink:
+        ipv4_address: 192.168.89.10
     hostname: vm10
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
       - NET_ADMIN
       - NET_BIND_SERVICE
-      - SYS_MODULE
 
   vm10-unbound:
     build: unbound-container
@@ -455,22 +546,31 @@ services:
       - vm10-hanad
     cap_add:
       - NET_ADMIN
+
+  vm10-hanansupdate:
+    build: hanansupdate-container
+    image: hana/hanansupdate-container
+    container_name: vm10-hanansupdate
+    network_mode: "service:vm10"
+    depends_on:
+      - vm10-hanad
   vm11:
     build: sshd-container
     image: hana/sshd-container
     container_name: "vm11"
     networks:
       upperlink:
-        ipv4_address: 192.168.87.111
+        ipv4_address: 192.168.87.11
       lowerlink:
-        ipv4_address: 192.168.88.111
+        ipv4_address: 192.168.88.11
+      maintainlink:
+        ipv4_address: 192.168.89.11
     hostname: vm11
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
       - NET_ADMIN
       - NET_BIND_SERVICE
-      - SYS_MODULE
 
   vm11-unbound:
     build: unbound-container
@@ -499,3 +599,11 @@ services:
       - vm11-hanad
     cap_add:
       - NET_ADMIN
+
+  vm11-hanansupdate:
+    build: hanansupdate-container
+    image: hana/hanansupdate-container
+    container_name: vm11-hanansupdate
+    network_mode: "service:vm11"
+    depends_on:
+      - vm11-hanad

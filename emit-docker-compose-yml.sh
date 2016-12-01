@@ -10,17 +10,26 @@ networks:
       driver: default
       config:
         - subnet: 192.168.87.0/24
+          gateway: 192.168.87.254
   lowerlink:
     driver: bridge
     ipam: # we want to use "null" driver, but it is broken...
       driver: default
       config:
         - subnet: 192.168.88.0/24
+          gateway: 192.168.88.254
+  maintainlink:
+    driver: bridge
+    ipam: # we want to use "null" driver, but it is broken...
+      driver: default
+      config:
+        - subnet: 192.168.89.0/24
+          gateway: 192.168.89.254
 
 services:
 EOF
 
-hostid=101
+hostid=1
 for vmname in vm1 vm2 vm3 vm4 vm5 vm6 vm7 vm8 vm9 vm10 vm11
 do
   cat << EOF
@@ -33,13 +42,14 @@ do
         ipv4_address: 192.168.87.$hostid
       lowerlink:
         ipv4_address: 192.168.88.$hostid
+      maintainlink:
+        ipv4_address: 192.168.89.$hostid
     hostname: $vmname
     dns: 127.0.0.1
     cap_add:
       - NET_RAW
       - NET_ADMIN
       - NET_BIND_SERVICE
-      - SYS_MODULE
 
   $vmname-unbound:
     build: unbound-container
@@ -68,6 +78,14 @@ do
       - $vmname-hanad
     cap_add:
       - NET_ADMIN
+
+  $vmname-hanansupdate:
+    build: hanansupdate-container
+    image: hana/hanansupdate-container
+    container_name: $vmname-hanansupdate
+    network_mode: "service:$vmname"
+    depends_on:
+      - $vmname-hanad
 EOF
 hostid=`expr $hostid + 1`
-done   
+done
