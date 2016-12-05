@@ -1,49 +1,38 @@
 #! /bin/sh
 
+if [ "$1" != "" ]; then
+  subnet_prefix=$1
+  netid=$2
+  shift
+  vms="$@"
+else
+  subnet_prefix=10.87
+  netid=87
+  vms="vm1 vm2"
+fi
+
 cat <<EOF
 version: '2'
 
 networks:
-  upperlink:
-    driver: bridge
-    ipam: # we want to use "null" driver, but it is broken...
-      driver: default
-      config:
-        - subnet: 192.168.87.0/24
-          gateway: 192.168.87.254
-  lowerlink:
-    driver: bridge
-    ipam: # we want to use "null" driver, but it is broken...
-      driver: default
-      config:
-        - subnet: 192.168.88.0/24
-          gateway: 192.168.88.254
   maintainlink:
-    driver: bridge
-    ipam: # we want to use "null" driver, but it is broken...
-      driver: default
-      config:
-        - subnet: 192.168.89.0/24
-          gateway: 192.168.89.254
+    external:
+      name: hana-maintainlink
 
 services:
 EOF
 
 hostid=1
-for vmname in vm1 vm2 vm3 vm4 vm5 vm6 vm7 vm8 vm9 vm10 vm11
+for vmname in $vms
 do
   cat << EOF
   $vmname:
     build: sshd-container
     image: hana/sshd-container
-    container_name: "$vmname"
+    container_name: $vmname
     networks:
-      upperlink:
-        ipv4_address: 192.168.87.$hostid
-      lowerlink:
-        ipv4_address: 192.168.88.$hostid
       maintainlink:
-        ipv4_address: 192.168.89.$hostid
+        ipv4_address: $subnet_prefix.$netid.$hostid
     hostname: $vmname
     dns: 127.0.0.1
     cap_add:
