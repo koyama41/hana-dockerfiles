@@ -6,11 +6,10 @@
 : ${BRCTL_ADDIF:="sudo brctl addif"}
 : ${HANA_LINKNAMES:="upper lower"}
 : ${IPCMD_NOSUDO:="ip"}
+: ${VMDIRS:="vm? vm??"}
 
 hana_maintainlink_interface=XXX0
 hana_upperlink_interface=XXX1
-
-workdir=`dirname $0`
 
 netaddr_for_maintainlink=10.87
 netaddr_for_upperlink=10.88
@@ -18,18 +17,13 @@ netaddr_for_lowerlink=10.89
 
 retry_max=3
 
-(cd $workdir; $DOCKER_COMPOSE stop)
+workdir=`dirname $0`
+cd $workdir
 
-images=`$(DOCKER) ps -a -q`
-if [ "$images" != "" ]; then $(DOCKER) rm $images; fi
+sh ./docker-compose-stop.sh
 
 for name in maintain $HANA_LINKNAMES
 do
-  if $DOCKER network inspect hana-${name}link >/dev/null 2>&1; then
-    echo -n "REMOVE: "
-    $DOCKER network rm hana-${name}link
-  fi
-
   eval netaddr=\$netaddr_for_${name}link
   echo -n "CREATE: "
   $DOCKER network create -d bridge \
@@ -52,39 +46,48 @@ do
   second_octet=`expr $second_octet + 1`
 done
 
-(cd $workdir
- force_recreate=--force-recreate
- while true
- do
-   if $DOCKER_COMPOSE up -d $force_recreate; then
-     break
-   fi
-   retry_max=`expr $retry_max - 1`
-   if [ $retry_max = 0 ]; then
-     break
-   fi
-   echo ''
-   #force_recreate=''
-   echo "### RETRY $DOCKER_COMPOSE up -d $force_recreate"
- done)
+for i in $VMDIRS
+do
+  if [ -e $i/$DOCKER_COMPOSE_YML ]; then
+    ( cd $i
+      force_recreate=--force-recreate
+      retry_count=0
+      while true
+      do
+        if $DOCKER_COMPOSE up -d $force_recreate; then
+          break
+        fi
+        retry_count=`expr $retry_count + 1`
+        if [ $retry_count -ge $retry_max ]; then
+          break
+        fi
+        #force_recreate=''
+        echo ''
+        echo "### RETRY $DOCKER_COMPOSE up -d $force_recreate"
+      done
+    )
+  fi
+  ( container_name=''
+    IFS=' :'
+    while read key value other
+    do
+      case $key in
+        container_name)
+          container_name=$value
+          ;;
+        ipv4_address)
+          hostaddr=${value#*.*.}
+          if [ "$container_name" != "" ]; then
+            for name in $HANA_LINKNAMES
+            do
+              eval netaddr=\$netaddr_for_${name}link
+              $DOCKER network connect --ip ${netaddr}.${hostaddr} \
+                                      hana-${name}link $container_name
+            done
+          fi
+          ;;
+      esac
+    done
+  ) < $DOCKER_COMPOSE_YML
+done
 
-(cd $workdir;
- container_name=''
- IFS=' :'
- while read key value other
- do
-   case $key in
-     container_name) container_name=$value;;
-     ipv4_address)
-       hostaddr=${value#*.*.}
-       if [ "$container_name" != "" ]; then
-         for name in $HANA_LINKNAMES
-         do
-           eval netaddr=\$netaddr_for_${name}link
-           $DOCKER network connect --ip ${netaddr}.${hostaddr} \
-		                   hana-${name}link $container_name
-         done
-       fi
-       ;;
-   esac
- done ) < $DOCKER_COMPOSE_YML
