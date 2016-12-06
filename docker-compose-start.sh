@@ -20,8 +20,6 @@ retry_max=3
 workdir=`dirname $0`
 cd $workdir
 
-sh ./docker-compose-stop.sh
-
 for name in maintain $HANA_LINKNAMES
 do
   eval netaddr=\$netaddr_for_${name}link
