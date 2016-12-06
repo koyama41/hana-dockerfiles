@@ -64,28 +64,28 @@ do
         echo "### RETRY $DOCKER_COMPOSE up -d $force_recreate"
       done
     )
+    ( container_name=''
+      IFS=' :'
+      while read key value other
+      do
+        case $key in
+          container_name)
+            container_name=$value
+            ;;
+          ipv4_address)
+            hostaddr=${value#*.*.}
+            if [ "$container_name" != "" ]; then
+              for name in $HANA_LINKNAMES
+              do
+                eval netaddr=\$netaddr_for_${name}link
+                $DOCKER network connect --ip ${netaddr}.${hostaddr} \
+                                        hana-${name}link $container_name
+              done
+            fi
+            ;;
+        esac
+      done
+    ) < $i/$DOCKER_COMPOSE_YML
   fi
-  ( container_name=''
-    IFS=' :'
-    while read key value other
-    do
-      case $key in
-        container_name)
-          container_name=$value
-          ;;
-        ipv4_address)
-          hostaddr=${value#*.*.}
-          if [ "$container_name" != "" ]; then
-            for name in $HANA_LINKNAMES
-            do
-              eval netaddr=\$netaddr_for_${name}link
-              $DOCKER network connect --ip ${netaddr}.${hostaddr} \
-                                      hana-${name}link $container_name
-            done
-          fi
-          ;;
-      esac
-    done
-  ) < $DOCKER_COMPOSE_YML
 done
 
