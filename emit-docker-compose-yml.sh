@@ -73,5 +73,24 @@ do
     depends_on:
       - $vmname-hanad
 EOF
-hostid=`expr $hostid + 1`
+
+  if [ "$vmname" = "vm0" ]; then
+    # special case:
+    cat <<EOF
+  $vmname-dns-server:
+    image: hana/dns-server-container
+    container_name: $vmname-dns-server
+    network_mode: "service:$vmname"
+    cap_add:
+      - NET_RAW
+      - NET_BIND_SERVICE
+
+  $vmname-hanavis-server:
+    image: hana/hanavis-server-container
+    container_name: $vmname-hanavis-server
+    network_mode: "service:$vmname"
+EOF
+
+  fi
+  hostid=`expr $hostid + 1`
 done
