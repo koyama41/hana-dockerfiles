@@ -4,13 +4,13 @@
 : ${DOCKER_COMPOSE:="sudo docker-compose"}
 : ${DOCKER_COMPOSE_YML:="docker-compose.yml"}
 : ${HANA_LINKNAMES:="upper lower"}
-: ${VMDIRS:="vm? vm??"}
+: ${VMS_DIR:=$HOME/HANA-docker-vms}
+: ${VMS_SUBDIRS:="vm? vm??"}
 
-workdir=`dirname $0`
+mkdir -p $VMS_DIR
+cd $VMS_DIR
 
-cd $workdir
-
-for i in $VMDIRS
+for i in $VMS_SUBDIRS
 do
   if [ -e $i/$DOCKER_COMPOSE_YML ]; then (cd $i; $DOCKER_COMPOSE stop); fi
 done

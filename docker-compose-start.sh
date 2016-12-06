@@ -6,7 +6,8 @@
 : ${BRCTL_ADDIF:="sudo brctl addif"}
 : ${HANA_LINKNAMES:="upper lower"}
 : ${IPCMD_NOSUDO:="ip"}
-: ${VMDIRS:="vm? vm??"}
+: ${VMS_DIR:=$HOME/HANA-docker-vms}
+: ${VMS_SUBDIRS:="vm? vm??"}
 
 hana_maintainlink_interface=XXX0
 hana_upperlink_interface=XXX1
@@ -17,8 +18,8 @@ netaddr_for_lowerlink=10.89
 
 retry_max=3
 
-workdir=`dirname $0`
-cd $workdir
+mkdir -p $VMS_DIR
+cd $VMS_DIR
 
 for name in maintain $HANA_LINKNAMES
 do
@@ -44,7 +45,7 @@ do
   second_octet=`expr $second_octet + 1`
 done
 
-for i in $VMDIRS
+for i in $VMS_SUBDIRS
 do
   if [ -e $i/$DOCKER_COMPOSE_YML ]; then
     ( cd $i
