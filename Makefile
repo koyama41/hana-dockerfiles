@@ -5,6 +5,8 @@ COMTAINER_AUTHOR=hana
 HANA_COMPONENTS=hanad hanapeerd hanaroute hanansupdate
 SSHD_COMPONENTS=sshd
 EXT_COMPONENTS=unbound
+DOCKER_COMPOSE_SCRIPTS=docker-compose-start.sh docker-compose-stop.sh docker-compose-restart.sh
+VMS_DIR=$(HOME)/HANA-docker-vms
 
 DOCKER=/usr/bin/docker
 DOCKER_COMPOSE=/usr/local/bin/docker-compose
@@ -44,3 +46,10 @@ buildclean: clean
 
 distclean: clean
 	rm -rf $(CHECKOUTDIR)
+
+install: all
+	sh ./create-docker-compose-ymls.sh
+	cp $(DOCKER_COMPOSE_SCRIPTS) $(VMS_DIR)
+
+uninstall:
+	rm -rf $(VMS_DIR)
