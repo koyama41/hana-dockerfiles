@@ -9,7 +9,7 @@ EXT_COMPONENTS=unbound
 DOCKER=/usr/bin/docker
 DOCKER_COMPOSE=/usr/local/bin/docker-compose
 
-.PHONY: all build clean buildclean distclean up start stop
+.PHONY: all build clean buildclean distclean
 
 all: build
 	@for component in $(HANA_COMPONENTS); do \
@@ -44,11 +44,3 @@ buildclean: clean
 
 distclean: clean
 	rm -rf $(CHECKOUTDIR)
-
-
-start: up
-up:
-	$(DOCKER_COMPOSE) up -d
-
-stop:
-	$(DOCKER_COMPOSE) stop

@@ -1,106 +1,28 @@
+# this docker-compose file supports to build (not support to run services)
+
 version: '2'
 
-networks:
-  maintainlink:
-    external:
-      name: hana-maintainlink
-
 services:
-  vm1:
+  vm:
     build: sshd-container
     image: hana/sshd-container
-    container_name: vm1
-    networks:
-      maintainlink:
-        ipv4_address: 10.87.87.1
-    hostname: vm1
-    dns: 127.0.0.1
-    cap_add:
-      - NET_RAW
-      - NET_ADMIN
-      - NET_BIND_SERVICE
 
-  vm1-unbound:
+  vm-unbound:
     build: unbound-container
     image: hana/unbound-container
-    container_name: vm1-unbound
-    network_mode: "service:vm1"
 
-  vm1-hanad:
+  vm-hanad:
     build: hanad-container
     image: hana/hanad-container
-    container_name: vm1-hanad
-    network_mode: "service:vm1"
 
-  vm1-hanapeerd:
+  vm-hanapeerd:
     build: hanapeerd-container
     image: hana/hanapeerd-container
-    container_name: vm1-hanapeerd
-    network_mode: "service:vm1"
 
-  vm1-hanaroute:
+  vm-hanaroute:
     build: hanaroute-container
     image: hana/hanaroute-container
-    container_name: vm1-hanaroute
-    network_mode: "service:vm1"
-    depends_on:
-      - vm1-hanad
-    cap_add:
-      - NET_ADMIN
 
-  vm1-hanansupdate:
+  vm-hanansupdate:
     build: hanansupdate-container
     image: hana/hanansupdate-container
-    container_name: vm1-hanansupdate
-    network_mode: "service:vm1"
-    depends_on:
-      - vm1-hanad
-  vm2:
-    build: sshd-container
-    image: hana/sshd-container
-    container_name: vm2
-    networks:
-      maintainlink:
-        ipv4_address: 10.87.87.2
-    hostname: vm2
-    dns: 127.0.0.1
-    cap_add:
-      - NET_RAW
-      - NET_ADMIN
-      - NET_BIND_SERVICE
-
-  vm2-unbound:
-    build: unbound-container
-    image: hana/unbound-container
-    container_name: vm2-unbound
-    network_mode: "service:vm2"
-
-  vm2-hanad:
-    build: hanad-container
-    image: hana/hanad-container
-    container_name: vm2-hanad
-    network_mode: "service:vm2"
-
-  vm2-hanapeerd:
-    build: hanapeerd-container
-    image: hana/hanapeerd-container
-    container_name: vm2-hanapeerd
-    network_mode: "service:vm2"
-
-  vm2-hanaroute:
-    build: hanaroute-container
-    image: hana/hanaroute-container
-    container_name: vm2-hanaroute
-    network_mode: "service:vm2"
-    depends_on:
-      - vm2-hanad
-    cap_add:
-      - NET_ADMIN
-
-  vm2-hanansupdate:
-    build: hanansupdate-container
-    image: hana/hanansupdate-container
-    container_name: vm2-hanansupdate
-    network_mode: "service:vm2"
-    depends_on:
-      - vm2-hanad

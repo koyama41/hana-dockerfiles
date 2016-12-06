@@ -3,12 +3,16 @@
 if [ "$1" != "" ]; then
   subnet_prefix=$1
   netid=$2
+  hostid=$3
+  shift
+  shift
   shift
   vms="$@"
 else
   subnet_prefix=10.87
   netid=87
-  vms="vm1 vm2"
+  hostid=1
+  vms="vm1 vm2 vm3"
 fi
 
 cat <<EOF
@@ -22,12 +26,10 @@ networks:
 services:
 EOF
 
-hostid=1
 for vmname in $vms
 do
   cat << EOF
   $vmname:
-    build: sshd-container
     image: hana/sshd-container
     container_name: $vmname
     networks:
@@ -41,25 +43,21 @@ do
       - NET_BIND_SERVICE
 
   $vmname-unbound:
-    build: unbound-container
     image: hana/unbound-container
     container_name: $vmname-unbound
     network_mode: "service:$vmname"
 
   $vmname-hanad:
-    build: hanad-container
     image: hana/hanad-container
     container_name: $vmname-hanad
     network_mode: "service:$vmname"
 
   $vmname-hanapeerd:
-    build: hanapeerd-container
     image: hana/hanapeerd-container
     container_name: $vmname-hanapeerd
     network_mode: "service:$vmname"
 
   $vmname-hanaroute:
-    build: hanaroute-container
     image: hana/hanaroute-container
     container_name: $vmname-hanaroute
     network_mode: "service:$vmname"
@@ -69,7 +67,6 @@ do
       - NET_ADMIN
 
   $vmname-hanansupdate:
-    build: hanansupdate-container
     image: hana/hanansupdate-container
     container_name: $vmname-hanansupdate
     network_mode: "service:$vmname"

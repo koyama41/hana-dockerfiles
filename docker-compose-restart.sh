@@ -16,7 +16,12 @@ netaddr_for_maintainlink=10.87
 netaddr_for_upperlink=10.88
 netaddr_for_lowerlink=10.89
 
+retry_max=3
+
 (cd $workdir; $DOCKER_COMPOSE stop)
+
+images=`$(DOCKER) ps -a -q`
+if [ "$images" != "" ]; then $(DOCKER) rm $images; fi
 
 for name in maintain $HANA_LINKNAMES
 do
@@ -47,8 +52,21 @@ do
   second_octet=`expr $second_octet + 1`
 done
 
-echo $workdir
-(cd $workdir; $DOCKER_COMPOSE up -d --force-recreate)
+(cd $workdir
+ force_recreate=--force-recreate
+ while true
+ do
+   if $DOCKER_COMPOSE up -d $force_recreate; then
+     break
+   fi
+   retry_max=`expr $retry_max - 1`
+   if [ $retry_max = 0 ]; then
+     break
+   fi
+   echo ''
+   #force_recreate=''
+   echo "### RETRY $DOCKER_COMPOSE up -d $force_recreate"
+ done)
 
 (cd $workdir;
  container_name=''
