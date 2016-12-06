@@ -31,7 +31,7 @@ keep-images:
 	  $(DOCKER) tag $$container $$container:`date +%Y.%m.%d.%H%M`; \
 	done
 
-clean: stop
+clean:
 	IMAGES=`$(DOCKER) ps -a -q`; if [ "$$IMAGES" != "" ]; then $(DOCKER) rm $$IMAGES; fi
 	for component in $(HANA_COMPONENTS); do \
 	  dir=$${component}-container; \
