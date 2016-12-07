@@ -9,6 +9,10 @@
 : ${VMS_DIR:=$HOME/HANA-docker-vms}
 : ${VMS_SUBDIRS:="vm? vm??"}
 
+if [ "$1" != "" ]; then
+  VMS_SUBDIRS="$@"
+fi
+
 hana_maintainlink_interface=XXX0
 hana_upperlink_interface=XXX1
 
@@ -47,7 +51,7 @@ done
 
 for i in $VMS_SUBDIRS
 do
-  if [ -e $i/$DOCKER_COMPOSE_YML ]; then
+  if [ -x $i/$DOCKER_COMPOSE_YML ]; then  # use -x instead of -e: XBITHACK
     ( cd $i
       force_recreate=--force-recreate
       retry_count=0
