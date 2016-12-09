@@ -5,11 +5,12 @@ COMTAINER_AUTHOR=hana
 HANA_COMPONENTS=hanad hanapeerd hanaroute hanansupdate
 SSHD_COMPONENTS=sshd
 EXT_COMPONENTS=unbound
+SCRIPTDIR=$(CHECKOUTDIR)/scripts/starbed
 DOCKER_COMPOSE_SCRIPTS=\
-	docker-compose-start.sh \
-	docker-compose-stop.sh \
-	docker-compose-restart.sh \
-	docker-compose-ps.sh
+	$(SCRIPTDIR)/docker-compose-start.sh \
+	$(SCRIPTDIR)/docker-compose-stop.sh \
+	$(SCRIPTDIR)/docker-compose-restart.sh \
+	$(SCRIPTDIR)/docker-compose-ps.sh
 VMS_DIR=$(HOME)/HANA-docker-vms
 
 DOCKER=/usr/bin/docker
@@ -52,7 +53,7 @@ distclean: clean
 	rm -rf $(CHECKOUTDIR)
 
 install: all
-	sh ./create-docker-compose-ymls.sh
+	sh $(SCRIPTDIR)/create-docker-compose-ymls.sh
 	cp $(DOCKER_COMPOSE_SCRIPTS) $(VMS_DIR)
 
 uninstall:
