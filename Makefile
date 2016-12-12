@@ -24,8 +24,9 @@ all: build
 	  dir=$${component}-container; \
 	  cp $(SRCDIR)/$$component/obj/$$component $$dir; \
 	done
-	@cp ~/.ssh/id_rsa.pub $(SSHD_COMPONENTS)-container/authorized_keys
+	@cp $(SRCDIR)/ncmodoki/obj/ncmodoki $(SSHD_COMPONENTS)-container
 	@cp $(SCRIPTDIR)/mping.sh $(SSHD_COMPONENTS)-container/mping.sh
+	@cp ~/.ssh/id_rsa.pub $(SSHD_COMPONENTS)-container/authorized_keys
 	$(DOCKER_COMPOSE) build
 
 build: $(CHECKOUTDIR)
