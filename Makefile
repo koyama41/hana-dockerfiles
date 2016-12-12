@@ -10,6 +10,7 @@ DOCKER_COMPOSE_SCRIPTS=\
 	$(SCRIPTDIR)/docker-compose-start.sh \
 	$(SCRIPTDIR)/docker-compose-stop.sh \
 	$(SCRIPTDIR)/docker-compose-restart.sh \
+	$(SCRIPTDIR)/docker-compose-oping.sh \
 	$(SCRIPTDIR)/docker-compose-ps.sh
 VMS_DIR=$(HOME)/HANA-docker-vms
 
@@ -24,6 +25,7 @@ all: build
 	  cp $(SRCDIR)/$$component/obj/$$component $$dir; \
 	done
 	@cp ~/.ssh/id_rsa.pub $(SSHD_COMPONENTS)-container/authorized_keys
+	@cp $(SCRIPTDIR)/mping.sh $(SSHD_COMPONENTS)-container/mping.sh
 	$(DOCKER_COMPOSE) build
 
 build: $(CHECKOUTDIR)
