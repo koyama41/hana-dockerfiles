@@ -26,3 +26,19 @@ services:
   vm-hanansupdate:
     build: hanansupdate-container
     image: hana/hanansupdate-container
+
+  vm0-hanavis-volume:
+    build: hanavis-volume-container
+    image: hana/hanavis-volume-container
+
+  vm0-hanavis-mysql:
+    build: hanavis-mysql-container
+    image: hana/hanavis-mysql-container
+
+  vm0-hanavis-httpd:
+    build: hanavis-httpd-container
+    image: hana/hanavis-httpd-container
+
+  vm0-hanavis-server:
+    build: hanavis-server-container
+    image: hana/hanavis-server-container
