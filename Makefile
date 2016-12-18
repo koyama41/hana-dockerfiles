@@ -5,7 +5,7 @@ SRCDIR=$(CHECKOUTDIR)/src
 COMTAINER_AUTHOR=hana
 HANA_COMPONENTS=hanad hanapeerd hanaroute hanansupdate
 SSHD_COMPONENTS=sshd
-HANAVIS_VOLUME_CONTAINER=hanavis-volume-container
+HANAVIS_SERVER_CONTAINER=hanavis-server-container
 EXT_COMPONENTS=unbound
 SCRIPTDIR=$(CHECKOUTDIR)/scripts/starbed
 DOCKER_COMPOSE_SCRIPTS=\
@@ -29,7 +29,7 @@ all: build
 	@cp -f $(SRCDIR)/ncmodoki/obj/ncmodoki $(SSHD_COMPONENTS)-container
 	@cp -f $(SCRIPTDIR)/mping.sh $(SSHD_COMPONENTS)-container/mping.sh
 	@cp -f ~/.ssh/id_rsa.pub $(SSHD_COMPONENTS)-container/authorized_keys
-	@cp -f $(HHH_V11N_SERVER_TAR) $(HANAVIS_VOLUME_CONTAINER)/
+	@cp -f $(HHH_V11N_SERVER_TAR) $(HANAVIS_SERVER_CONTAINER)/
 	$(DOCKER_COMPOSE) build
 
 build: $(CHECKOUTDIR) $(HHH_V11N_SERVER_TAR)
@@ -68,7 +68,7 @@ clean:
 	rm -f $(SSHD_COMPONENTS)-container/authorized_keys
 	rm -f $(SSHD_COMPONENTS)-container/mping.sh
 	rm -f $(SSHD_COMPONENTS)-container/ncmodoki
-	rm -f $(HANAVIS_VOLUME_CONTAINER)/$(HHH_V11N_SERVER_TAR)
+	rm -f $(HANAVIS_SERVER_CONTAINER)/$(HHH_V11N_SERVER_TAR)
 
 buildclean: clean
 	(cd $(SRCDIR); make clean)
