@@ -27,6 +27,10 @@ services:
     build: hanansupdate-container
     image: hana/hanansupdate-container
 
+  vm0-dns-serevr:
+    build: dns-server-container
+    image: hana/dns-server-container
+
   vm0-hanavis-server:
     build: hanavis-server-container
     image: hana/hanavis-server-container
