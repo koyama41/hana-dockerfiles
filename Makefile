@@ -82,6 +82,7 @@ distclean: clean
 	rm -rf $(CHECKOUTDIR) $(HHH_V11N_SERVER_TAR)
 
 install: all
+	mkdir -p $(VMS_DIR)
 	sh $(SCRIPTDIR)/create-docker-compose-ymls.sh
 	cp $(DOCKER_COMPOSE_SCRIPTS) $(VMS_DIR)
 	$(SRCDIR)/hana-config.rb -o $(VMS_DIR) $(SCRIPTDIR)/hana-config.yml.erb
