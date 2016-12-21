@@ -13,7 +13,8 @@ DOCKER_COMPOSE_SCRIPTS=\
 	$(SCRIPTDIR)/docker-compose-stop.sh \
 	$(SCRIPTDIR)/docker-compose-restart.sh \
 	$(SCRIPTDIR)/docker-compose-oping.sh \
-	$(SCRIPTDIR)/docker-compose-ps.sh
+	$(SCRIPTDIR)/docker-compose-ps.sh \
+	$(SCRIPTDIR)/activate-vm.sh
 HANA_SCRIPTS=\
 	$(SCRIPTDIR)/send-hanad-conf.sh \
 	$(SCRIPTDIR)/send-hanapeerd-conf.sh
