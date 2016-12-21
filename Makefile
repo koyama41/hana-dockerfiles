@@ -14,6 +14,9 @@ DOCKER_COMPOSE_SCRIPTS=\
 	$(SCRIPTDIR)/docker-compose-restart.sh \
 	$(SCRIPTDIR)/docker-compose-oping.sh \
 	$(SCRIPTDIR)/docker-compose-ps.sh
+HANA_SCRIPTS=\
+	$(SCRIPTDIR)/send-hanad-conf.sh \
+	$(SCRIPTDIR)/send-hanapeerd-conf.sh
 VMS_DIR=$(HOME)/HANA-docker-vms
 
 DOCKER=/usr/bin/docker
@@ -80,6 +83,7 @@ install: all
 	sh $(SCRIPTDIR)/create-docker-compose-ymls.sh
 	cp $(DOCKER_COMPOSE_SCRIPTS) $(VMS_DIR)
 	$(SRCDIR)/hana-config.rb -o $(VMS_DIR) $(SCRIPTDIR)/hana-config.yml.erb
+	cp $(HANA_SCRIPTS) $(VMS_DIR)
 
 uninstall:
 	rm -rf $(VMS_DIR)
