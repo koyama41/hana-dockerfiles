@@ -1,9 +1,5 @@
-FROM python:2.7
-ENV PYTHONUNBUFFERED 1
-RUN mkdir /code
-WORKDIR /code
-ADD requirements.txt /code/
-RUN pip install -r requirements.txt
+FROM koyama41/python2.7-django
+MAINTAINER KOYAMA Youichi <koyama41@gmail.com>
 ADD . /code/
 RUN mkdir -p /opt/hhh-v11n
 WORKDIR /opt/hhh-v11n
