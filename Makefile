@@ -8,17 +8,6 @@ SSHD_COMPONENTS=sshd
 HANAVIS_SERVER_CONTAINER=hanavis-server-container
 EXT_COMPONENTS=unbound
 SCRIPTDIR=$(CHECKOUTDIR)/scripts/starbed
-DOCKER_COMPOSE_SCRIPTS=\
-	$(SCRIPTDIR)/docker-compose-start.sh \
-	$(SCRIPTDIR)/docker-compose-stop.sh \
-	$(SCRIPTDIR)/docker-compose-restart.sh \
-	$(SCRIPTDIR)/docker-compose-oping.sh \
-	$(SCRIPTDIR)/docker-compose-ps.sh \
-	$(SCRIPTDIR)/activate-vm.sh \
-	$(SCRIPTDIR)/start-vms.sh
-HANA_SCRIPTS=\
-	$(SCRIPTDIR)/send-hanad-conf.sh \
-	$(SCRIPTDIR)/send-hanapeerd-conf.sh
 VMS_DIR=$(HOME)/HANA-docker-vms
 
 DOCKER=/usr/bin/docker
@@ -84,9 +73,7 @@ distclean: clean
 install: all
 	mkdir -p $(VMS_DIR)
 	sh $(SCRIPTDIR)/create-docker-compose-ymls.sh
-	cp $(DOCKER_COMPOSE_SCRIPTS) $(VMS_DIR)
-	$(SRCDIR)/hana-config.rb -o $(VMS_DIR) $(SCRIPTDIR)/hana-config.yml.erb
-	cp $(HANA_SCRIPTS) $(VMS_DIR)
+	(cd $(SCRIPTDIR); $(MAKE) install)
 
 uninstall:
 	rm -rf $(VMS_DIR)
