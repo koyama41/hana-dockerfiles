@@ -13,7 +13,13 @@ do
       $MANAGE_PY addhanadaemonconsole --csv /etc/hhh/nodes.csv
       echo "Start rc.hhh"
       export RES_OPTIONS='ndots:2'
-      exec /etc/hhh/rc.hhh
+      sh /etc/hhh/rc.hhh
+      while true
+      do
+        echo "--- Current Process Status ---"
+        ps -aef
+        sleep 60
+      done
     fi
   else
     echo -n "."
