@@ -12,4 +12,6 @@ RUN mv hhh_v11n_observatory.conf.sample hhh_v11n_observatory.conf
 RUN echo 'BROADCASTER_LISTEN_ADDR=0.0.0.0:8081' > hhh_v11n_broadcaster.conf
 VOLUME /opt
 RUN ln -s /opt/hhh-v11n/hhh_v11n_server/etcfiles/hhh /etc/hhh
-CMD [ "/bin/sh" ]
+ADD start.sh /etc/hhh
+ENTRYPOINT /etc/hhh/start.sh
+CMD [ ]
