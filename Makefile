@@ -70,7 +70,7 @@ buildclean: clean
 distclean: clean
 	rm -rf $(CHECKOUTDIR) $(HHH_V11N_SERVER_TAR)
 
-install: all
+install:
 	mkdir -p $(VMS_DIR)
 	sh $(SCRIPTDIR)/create-docker-compose-ymls.sh
 	(cd $(SCRIPTDIR); $(MAKE) install)
