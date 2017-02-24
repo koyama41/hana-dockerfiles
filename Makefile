@@ -13,6 +13,28 @@ VMS_DIR=$(HOME)/HANA-docker-vms
 DOCKER=/usr/bin/docker
 DOCKER_COMPOSE=/usr/local/bin/docker-compose
 
+DOCKER_IMAGES_BASE=docker-images-base.tar.xz
+DOCKER_IMAGES_HANA=docker-images-hana.tar.xz
+
+BASE_IMAGE_NAMES=ubuntu:14.04 mysql \
+	koyama41/ubuntu14.04-dnsutils \
+	koyama41/ubuntu14.04-unbound \
+	koyama41/ubuntu14.04-bind9 \
+	koyama41/ubuntu14.04-sshd-netadmin \
+	koyama41/ubuntu14.04-python-httpd
+
+HANA_IMAGE_NAMES=$(BASE_IMAGE_NAMES) \
+	hana/hanad-container \
+	hana/hanapeerd-container \
+	hana/hanaroute-container \
+	hana/hanansupdate-container \
+	hana/sshd-container \
+	hana/unbound-container \
+	hana/dns-server-container \
+	hana/hanavis-mysql-container \
+	hana/hanavis-httpd-container \
+	hana/hanavis-server-container
+
 .PHONY: all build clean buildclean distclean
 
 all: build
@@ -47,6 +69,13 @@ $(HHH_V11N_SERVER_TAR):
 	    exit 1; \
 	 fi
 
+save-images: $(DOCKER_IMAGES_BASE) $(DOCKER_IMAGES_HANA)
+
+$(DOCKER_IMAGES_BASE): all
+	$(DOCKER) save $(BASE_IMAGE_NAMES) | xz -9 > $(DOCKER_IMAGES_BASE)
+$(DOCKER_IMAGES_HANA): all
+	$(DOCKER) save $(HANA_IMAGE_NAMES) | xz -9 > $(DOCKER_IMAGES_HANA)
+
 keep-images:
 	@for component in $(HANA_COMPONENTS) $(SSHD_COMPONENT) $(EXT_COMPONENTS); do \
 	  container=$(CONTAINER_AUTHOR)/$${component}-container; \
@@ -67,8 +96,12 @@ clean:
 buildclean: clean
 	(cd $(SRCDIR); make clean)
 
+imageclean:
+	docker rmi -f $(HANA_IMAGE_NAMES) || exit 0
+
 distclean: clean
 	rm -rf $(CHECKOUTDIR) $(HHH_V11N_SERVER_TAR)
+	rm -rf $(DOCKER_IMAGES_BASE) $(DOCKER_IMAGES_HANA)
 
 install:
 	mkdir -p $(VMS_DIR)
