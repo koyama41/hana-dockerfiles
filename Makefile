@@ -105,8 +105,8 @@ distclean: clean
 
 install:
 	mkdir -p $(VMS_DIR)
-	sh $(SCRIPTDIR)/create-docker-compose-ymls.sh
 	(cd $(SCRIPTDIR); $(MAKE) install)
+	sh $(SCRIPTDIR)/create-docker-compose-ymls.sh
 
 uninstall:
 	rm -rf $(VMS_DIR)
